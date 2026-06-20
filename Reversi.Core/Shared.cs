@@ -11,7 +11,6 @@ public enum Player
     Black
 }
 
-
 public static class PlayerExtensions
 {
     extension(Player player)
@@ -127,4 +126,32 @@ public class GameState
     public Player OppositePlayer => CurrentPlayer.Opposite();
     public byte CurrentPlayerScore => Board.CalcCells(CurrentPlayer.ToCell());
     public byte OppositePlayerScore => Board.CalcCells(OppositePlayer.ToCell());
+}
+
+/// <summary>
+/// Тип гри.
+/// </summary>
+public enum GameType
+{
+    Local,
+    NetworkHost,
+    NetworkClient
+}
+
+/// <summary>
+/// Налаштування мережі.
+/// </summary>
+public struct NetworkSettings()
+{
+    public string Host { get; init; } = "127.0.0.1";
+    public required ushort Port { get; init; }
+}
+
+/// <summary>
+/// Повні налаштування гри для контролера.
+/// </summary>
+public struct GameSettings
+{
+    public required GameType GameType { get; init; }
+    public NetworkSettings? NetworkSettings { get; init; }
 }
