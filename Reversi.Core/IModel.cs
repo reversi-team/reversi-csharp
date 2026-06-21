@@ -7,7 +7,7 @@ public interface IModel
     /// </summary>
     /// <returns>Актуальний стан гри.</returns>
     public GameState CurrentState();
-    
+
     /// <summary>
     /// Надає список можливих ходів.
     /// </summary>
@@ -16,7 +16,7 @@ public interface IModel
     /// </remarks>
     /// <returns>Список можливих ходів.</returns>
     public Coords[] PossibleMoves();
-    
+
     /// <summary>
     /// Виконує хід для активного гравця.
     /// </summary>
@@ -25,7 +25,7 @@ public interface IModel
     /// <exception cref="ImpossibleMoveException">Виникає, якщо хід за переданими координатами неможливий.</exception>
     /// <returns>Актуальний стан гри.</returns>
     public GameState Move(Coords coords);
-    
+
     /// <summary>
     /// Пропускає хід, якщо гравець не має можливих ходів.
     /// </summary>

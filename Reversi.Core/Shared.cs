@@ -108,7 +108,9 @@ public class Board
         foreach (var currentCell in _cells)
         {
             if (currentCell == cellType)
+            {
                 result++;
+            }
         }
 
         return result;

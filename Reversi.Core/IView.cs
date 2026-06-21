@@ -13,7 +13,7 @@ public interface IView
     /// </summary>
     /// <returns>Налаштування для нової гри.</returns>
     GameSettings Start();
-    
+
     /// <summary>
     /// Завершує ігровий цикл і показує результат гри.
     /// View самостійно вирішує, що пропонувати користувачу далі (зіграти ще раз, повернутись в меню тощо).
@@ -30,13 +30,13 @@ public interface IView
     /// </summary>
     /// <param name="gameState">Поточний стан гри.</param>
     /// <param name="message">Повідомлення для відображення (опціонально)</param>
-    void RenderGame(GameState gameState, ViewMessage message =  ViewMessage.None);
-    
+    void RenderGame(GameState gameState, ViewMessage message = ViewMessage.None);
+
     /// <summary>
     /// Оновлює екран (очищає його і виводить внутрішній буфер).
     /// </summary>
     void Draw();
-    
+
     /// <summary>
     /// Повертає введені координати.
     /// </summary>
