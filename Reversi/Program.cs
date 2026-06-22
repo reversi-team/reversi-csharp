@@ -1,4 +1,4 @@
-﻿namespace Reversi;
+namespace Reversi;
 
 class Program
 {
