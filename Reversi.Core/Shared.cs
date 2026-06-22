@@ -74,7 +74,7 @@ public enum BoardCell
 }
 
 /// <summary>
-/// Представлення ігровог поля.
+/// Представлення ігрового поля.
 /// </summary>
 public class Board
 {
