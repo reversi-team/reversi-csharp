@@ -21,6 +21,11 @@ cd reversi-csharp
 git checkout -b your-branch-name
 ```
 
+Або в сучасніший спосіб:
+```bash
+git switch -c your-branch-name
+```
+
 3. Не забувайте підтягувати актуальні зміни з main. Завжди робіть це перед пушем:
 
 ```bash
@@ -30,7 +35,10 @@ git pull --rebase origin main
 4. На кожну задачу створюйте окремий, інформативний коміт:
 
 ```bash
-git add .
+dotnet format        # виконайте щоб гарантувати відповідність форматування стандартам проєкту
+git status           # перегляньте які файли змінились
+git diff             # перегляньте що саме змінилося
+git add file1 file2  # додайте необхідні файли до коміту
 git commit -m "feat(model): implement moves validation"
 ```
 
@@ -49,17 +57,17 @@ git push -u origin your-branch-name
 Усі робочі гілки створюються від актуального стану main і повинні мати чіткий префікс, що вказує на тип задачі. Назви
 пишуться нижнім регістром (lowercase) з використанням дефісів замість пробілів.
 
-* **`feature/`** — розробка нового функціоналу.
-    * *Приклад:* `feature/model-rules`, `feature/view-console-render`, `feature/model-bot-player`
-* **`bugfix/`** — виправлення помилок у коді.
-    * *Приклад:* `bugfix/model-disk-flip-logic`, `bugfix/view-score-counter-overflow`
+* **`feat/`** — розробка нового функціоналу.
+    * *Приклад:* `feat/model-rules`, `feat/view-console-render`, `feat/model-bot-player`
+* **`fix/`** — виправлення помилок у коді.
+    * *Приклад:* `fix/model-disk-flip-logic`, `fix/view-score-counter-overflow`
 * **`refactor/`** — зміна структури коду без зміни функціоналу або виправлення помилок.
     * *Приклад:* `refactor/clean-core-interfaces`, `refactor/optimize-model-board-array`
 
 ### Довготривалі гілки модулів
 
-Якщо ви автономно розробляєте окремий великий модуль, допускається створення однієї базової гілки для цього компонента 
-(наприклад, `dev/model`, `dev/view` etc).
+Якщо ви автономно розробляєте окремий великий модуль, допускається створення однієї базової гілки для цього компонента.
+Використовуйте формат dev/<назва-модуля> (наприклад, `dev/model`, `dev/view` etc).
 
 При роботі в такому форматі:
 
@@ -86,6 +94,8 @@ git push -u origin your-branch-name
     * *Приклад:* `fix(view): fix validation of incorrect moves`
 * **`refactor:`** — рефакторинг коду.
     * *Приклад:* `refactor(model): optimize algorithm in GetPossibleMoves`
+* **`chore:`** — зміни що не стосуються коду (документація, конфіги, ліцензії тощо).
+    * *Приклад:* `chore(readme): improve development guidelines in README`
 
 **Правила написання опису:**
 
