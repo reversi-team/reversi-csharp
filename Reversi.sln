@@ -4,6 +4,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Reversi", "Reversi\Reversi.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Reversi.Core", "Reversi.Core\Reversi.Core.csproj", "{871E1CD5-C7B4-4B79-9082-ADF3CD945D23}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Reversi.Network", "Reversi.Network\Reversi.Network.csproj", "{858ADC07-4B77-4B8B-B9AE-B6DC94CD05B1}"
+EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Reversi.Tests", "Reversi.Tests\Reversi.Tests.csproj", "{B37628D1-19B7-4E56-BA3F-257F3920BB98}"
 EndProject
 Global
@@ -36,6 +38,10 @@ Global
 		{871E1CD5-C7B4-4B79-9082-ADF3CD945D23}.Debug|x86.Build.0 = Debug|Any CPU
 		{871E1CD5-C7B4-4B79-9082-ADF3CD945D23}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{871E1CD5-C7B4-4B79-9082-ADF3CD945D23}.Release|Any CPU.Build.0 = Release|Any CPU
+		{858ADC07-4B77-4B8B-B9AE-B6DC94CD05B1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{858ADC07-4B77-4B8B-B9AE-B6DC94CD05B1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{858ADC07-4B77-4B8B-B9AE-B6DC94CD05B1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{858ADC07-4B77-4B8B-B9AE-B6DC94CD05B1}.Release|Any CPU.Build.0 = Release|Any CPU
 		{871E1CD5-C7B4-4B79-9082-ADF3CD945D23}.Release|x64.ActiveCfg = Release|Any CPU
 		{871E1CD5-C7B4-4B79-9082-ADF3CD945D23}.Release|x64.Build.0 = Release|Any CPU
 		{871E1CD5-C7B4-4B79-9082-ADF3CD945D23}.Release|x86.ActiveCfg = Release|Any CPU
