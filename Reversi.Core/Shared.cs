@@ -5,7 +5,7 @@ namespace Reversi.Core;
 /// <summary>
 /// Колір гравця.
 /// </summary>
-public enum Player
+public enum Player : byte
 {
     White,
     Black
@@ -48,7 +48,7 @@ public static class PlayerExtensions
 /// <summary>
 /// Статус гри.
 /// </summary>
-public enum GameStatus
+public enum GameStatus : byte
 {
     Continue,
     Draw,
@@ -133,7 +133,7 @@ public class GameState
 /// <summary>
 /// Тип гри.
 /// </summary>
-public enum GameType
+public enum GameType : byte
 {
     Local,
     NetworkHost,
