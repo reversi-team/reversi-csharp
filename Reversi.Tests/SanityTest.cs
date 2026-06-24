@@ -1,4 +1,4 @@
-﻿namespace Reversi.Tests;
+namespace Reversi.Tests;
 
 public class SanityTest
 {
