@@ -4,11 +4,18 @@ using Reversi.Network.Protocol;
 
 namespace Reversi.Network;
 
+/// <summary>
+/// Manages sending and receiving protocol messages over a network stream using binary serialization.
+/// </summary>
+/// <param name="stream">The underlying network stream used for data transport.</param>
 public class NetworkConnection(NetworkStream stream) : IDisposable
 {
     private readonly BinaryReader _reader = new(stream);
     private readonly BinaryWriter _writer = new(stream);
 
+    /// <summary>
+    /// Releases all resources used by the readers, writers, and the underlying stream.
+    /// </summary>
     public void Dispose()
     {
         _reader.Dispose();
@@ -17,6 +24,11 @@ public class NetworkConnection(NetworkStream stream) : IDisposable
         GC.SuppressFinalize(this);
     }
 
+    /// <summary>
+    /// Sends a protocol message to the remote peer.
+    /// </summary>
+    /// <param name="message">The network message to serialize and transmit.</param>
+    /// <exception cref="NetworkErrorException">Thrown when an I/O error occurs while writing data to the stream.</exception>
     public void SendMessage(NetworkMessage message)
     {
         try
@@ -37,10 +49,17 @@ public class NetworkConnection(NetworkStream stream) : IDisposable
         }
         catch (IOException e)
         {
-            throw new NetworkError(inner: e);
+            throw new NetworkErrorException(inner: e);
         }
     }
 
+    /// <summary>
+    /// Receives and deserializes the next protocol message from the network stream.
+    /// </summary>
+    /// <returns>The deserialized <see cref="NetworkMessage"/> sent by the remote peer.</returns>
+    /// <exception cref="DisconnectException">Thrown when the stream ends, indicating the remote peer has closed the connection.</exception>
+    /// <exception cref="NetworkErrorException">Thrown when a generic transport-level or I/O error occurs.</exception>
+    /// <exception cref="ProtocolException">Thrown when the received message type is invalid or unrecognized by the game protocol.</exception>
     public NetworkMessage ReceiveMessage()
     {
         MessageType type;
@@ -54,9 +73,8 @@ public class NetworkConnection(NetworkStream stream) : IDisposable
         }
         catch (IOException e)
         {
-            throw new NetworkError(inner: e);
+            throw new NetworkErrorException(inner: e);
         }
-
 
         switch (type)
         {
