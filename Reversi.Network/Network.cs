@@ -10,6 +10,7 @@ namespace Reversi.Network;
 public abstract class Network
 {
     protected NetworkConnection? Connection;
+    public bool Connected => Connection != null;
 
     /// <summary>
     /// Closes the active network connection and releases all allocated transport resources.
