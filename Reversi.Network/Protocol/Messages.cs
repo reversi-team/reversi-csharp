@@ -1,40 +1,38 @@
 namespace Reversi.Network.Protocol;
 
-public class NetworkMessage
+public abstract class NetworkMessage
 {
-    public MessageType Type { get; set; }
-    public byte[]? Data { get; set; }
+    public abstract MessageType Type { get; }
 }
 
 public class ConnectMessage : NetworkMessage
 {
-    public new static MessageType Type => MessageType.Connect;
-    public new static byte[]? Data => null;
+    public override MessageType Type => MessageType.Connect;
 }
 
 public class AcceptConnectMessage(Core.Player player) : NetworkMessage
 {
-    public new static MessageType Type => MessageType.AcceptConnect;
-    public new byte[]? Data { get; init; } = [(byte)player];
+    public override MessageType Type => MessageType.AcceptConnect;
+    public Core.Player Player { get; } = player;
 }
 
 public class StatusOkMessage : NetworkMessage
 {
-    public new static MessageType Type => MessageType.StatusOk;
+    public override MessageType Type => MessageType.StatusOk;
 }
 
 public class StatusErrorMessage : NetworkMessage
 {
-    public new static MessageType Type => MessageType.StatusError;
+    public override MessageType Type => MessageType.StatusError;
 }
 
 public class MoveMessage(Core.Coords coords) : NetworkMessage
 {
-    public new static MessageType Type => MessageType.Move;
-    public new byte[]? Data { get; init; } = [coords.X, coords.Y];
+    public override MessageType Type => MessageType.Move;
+    public Core.Coords Coords { get; } = coords;
 }
 
 public class PassMessage : NetworkMessage
 {
-    public new static MessageType Type => MessageType.Pass;
+    public override MessageType Type => MessageType.Pass;
 }
