@@ -30,7 +30,7 @@ public static class PlayerExtensions
         }
 
         /// <summary>
-        /// Повертає тип клітинки, що відпвідає кольору гравця.
+        /// Повертає тип клітинки, що відповідає кольору гравця.
         /// </summary>
         /// <returns>Тип клітинки, що відповідає кольору гравця.</returns>
         public BoardCell ToCell()
@@ -141,11 +141,21 @@ public enum GameType : byte
 }
 
 /// <summary>
-/// Налаштування мережі.
+/// Налаштування мережі гри для хоста.
 /// </summary>
-public struct NetworkSettings()
+public struct HostSettings()
 {
-    public string Host { get; init; } = "127.0.0.1";
+    public string Host { get; init; } = "0.0.0.0";
+    public required ushort Port { get; init; } = 0;
+    public required Player HostPlayer { get; init; }
+}
+
+/// <summary>
+/// Налаштування гри для клієнта.
+/// </summary>
+public struct ClientSettings
+{
+    public required string Host { get; init; }
     public required ushort Port { get; init; }
 }
 
@@ -155,5 +165,6 @@ public struct NetworkSettings()
 public struct GameSettings
 {
     public required GameType GameType { get; init; }
-    public NetworkSettings? NetworkSettings { get; init; }
+    public HostSettings? HostSettings { get; init; }
+    public ClientSettings? ClientSettings { get; init; }
 }
