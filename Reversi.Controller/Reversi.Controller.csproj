@@ -6,4 +6,9 @@
         <Nullable>enable</Nullable>
     </PropertyGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\Reversi.Core\Reversi.Core.csproj" />
+      <ProjectReference Include="..\Reversi.Network\Reversi.Network.csproj" />
+    </ItemGroup>
+
 </Project>
