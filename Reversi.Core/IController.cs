@@ -17,7 +17,7 @@ public interface IController
     /// View отримує список валідних ходів і повертає обрані <see cref="Coords"/>.
     /// </param>
     /// <returns><see cref="GameStatus"/> що представляє результат завершеної гри.</returns>
-    static abstract GameStatus Play(
+    static abstract GameState Play(
         GameSettings gameSettings,
         Action<GameState> drawGame,
         Func<Coords[], Coords> askMove
