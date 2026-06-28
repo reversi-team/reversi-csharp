@@ -6,7 +6,10 @@ public interface IController
     /// Запускає одну ігрову сесію від початку до кінця.
     /// Щоразу створює новий екземпляр моделі всередині.
     /// </summary>
-    /// <exception cref="Exception">Поки повний список не буде додано в документацію, можна перехоплювати базовий клас.</exception>
+    /// <exception cref="UnexpectedModelException">Неочікувана помилка в моделі. Свідчить про баг в коді.</exception>
+    /// <exception cref="OpponentDisconnectedException">Опонент закрив з'єднання під час мережевої гри.</exception>
+    /// <exception cref="ControllerNetworkErrorException">Під час обробки мережевих запитів сталася помилка.</exception>
+    /// <exception cref="UnhandledException">Неперехоплений виняток. Свідчить про баг в коді.</exception>
     /// <param name="gameSettings">Налаштування для ініціалізації ігрової сесії.</param>
     /// <param name="drawGame">
     /// Колбек який викликається контролером для відображення поточного стану гри.
