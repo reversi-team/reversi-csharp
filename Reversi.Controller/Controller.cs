@@ -145,6 +145,16 @@ public class Controller<TModel> : IController
             if (possibleMoves.Length == 0)
             {
                 gameState = model.Pass();
+                if (localPlayerMove)
+                {
+                    network.Send(new PassMessage());
+                    network.ReceiveMessage<StatusOkMessage>();
+                }
+                else
+                {
+                    network.ReceiveMessage<PassMessage>();
+                    network.Send(new StatusOkMessage());
+                }
                 continue;
             }
 
