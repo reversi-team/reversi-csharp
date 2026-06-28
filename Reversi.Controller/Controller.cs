@@ -2,7 +2,6 @@ using System.Diagnostics;
 using Reversi.Core;
 using Reversi.Network;
 using Reversi.Network.Protocol;
-using NetworkErrorException = Reversi.Core.NetworkErrorException;
 
 namespace Reversi.Controller;
 
@@ -29,7 +28,7 @@ public class Controller<TModel> : IController
         }
         catch (NetworkException)
         {
-            throw new NetworkErrorException();
+            throw new ControllerNetworkErrorException();
         }
         catch (Exception e)
         {
@@ -174,7 +173,7 @@ public class Controller<TModel> : IController
                 if (!possibleMoves.Contains(move))
                 {
                     network.Send(new StatusErrorMessage());
-                    throw new NetworkErrorException(new ProtocolException("Impossible move!"));
+                    throw new ControllerNetworkErrorException(new ProtocolException("Impossible move!"));
                 }
                 network.Send(new StatusOkMessage());
             }

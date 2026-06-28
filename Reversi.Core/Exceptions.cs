@@ -27,7 +27,7 @@ public class UnexpectedModelException(ModelException inner)
 public class OpponentDisconnectedException(Exception inner)
     : ControllerException(inner);
 
-public class NetworkErrorException(Exception? inner = null)
+public class ControllerNetworkErrorException(Exception? inner = null)
     : ControllerException(inner);
 
 public class UnhandledException(string message, Exception? inner = null)
