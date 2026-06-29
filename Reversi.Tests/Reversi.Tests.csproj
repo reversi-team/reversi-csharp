@@ -18,4 +18,8 @@
         <Using Include="Xunit"/>
     </ItemGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\Reversi.Network\Reversi.Network.csproj" />
+    </ItemGroup>
+
 </Project>
