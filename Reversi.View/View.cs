@@ -6,21 +6,20 @@ using Spectre.Console;
 
 namespace Reversi.View;
 
-
 /// <summary>
 /// Консольна реалізація IView на базі Spectre.Console.
-/// 
+///
 /// Архітектура:
 /// - View.Main() повністю керує потоком програми (меню, цикл ігор, вихід)
-/// - Під час гри View передає контролеру три делегати:
-///     drawGame   — контролер викликає щоб оновити дошку на екрані
-///     askMove    — контролер викликає щоб отримати хід від гравця
-/// - Винятки з контролера (ImpossibleMoveException, ImpossiblePassException тощо)
-///   перехоплюються у View і відображаються локалізованим повідомленням
+/// - Під час гри View передає контролеру делегати:
+///     drawGame — контролер викликає щоб оновити дошку на екрані
+///     askMove  — контролер викликає щоб отримати хід від гравця
+/// - Винятки з контролера перехоплюються у View і відображаються
+///   локалізованим повідомленням
 /// </summary>
 public sealed class View : IView
 {
-    // ── ASCII art (Figlet "Big") ───────────────────────────────────────────────
+    // ── ASCII art (Figlet "Big") ──────────────────────────────────────────────
     private const string Title =
         """
          _____  ________      ________ _____   _____ _____ 
@@ -39,22 +38,20 @@ public sealed class View : IView
     /// <inheritdoc/>
     public void Main<TController>() where TController : IController
     {
-        Console.OutputEncoding = Encoding.GetEncoding(1251);
-        Console.InputEncoding = Encoding.GetEncoding(1251);
+        Console.OutputEncoding = Encoding.UTF8;
+        Console.InputEncoding = Encoding.UTF8;
 
         _loc = Localization.For(PickLanguage());
 
         while (true)
         {
-            int choice = ShowMainMenu();
-            if (choice == 1) break;
-
-            var settings = new GameSettings { GameType = GameType.Local };
+            var settings = ShowMainMenu();
+            if (settings is null) break;
 
             try
             {
                 var result = TController.Play(
-                      settings,
+                    settings.Value,
                     drawGame: ShowGameState,
                     askMove: AskMove
                 );
@@ -71,14 +68,14 @@ public sealed class View : IView
                 ShowError(_loc.MsgImpossiblePass);
                 Pause();
             }
-            catch (GameEndedException)    
+            catch (GameEndedException)
             {
                 ShowError(_loc.MsgGameEnded);
                 Pause();
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                ShowError($"{_loc.ErrUnknown}: {e.Message}");
+                ShowError(_loc.ErrUnknown);
                 Pause();
             }
 
@@ -99,11 +96,7 @@ public sealed class View : IView
         DrawScorePanel(state);
         AnsiConsole.WriteLine();
 
-        var validMoves = state.CurrentGameStatus == GameStatus.Continue
-            ? new HashSet<Coords>()  // контролер сам знає валідні ходи
-            : new HashSet<Coords>();
-
-        var table = BoardRenderer.BuildTable(state.Board, validMoves);
+        var table = BoardRenderer.BuildTable(state.Board, new HashSet<Coords>());
         AnsiConsole.Write(table);
 
         AnsiConsole.WriteLine();
@@ -112,26 +105,36 @@ public sealed class View : IView
 
     /// <summary>
     /// Читає хід від гравця. Передається контролеру як делегат askMove.
-    /// validMoves — список допустимих ходів для підсвічування на дошці.
+    /// Перевіряє що введені координати є у списку допустимих ходів.
     /// </summary>
     private Coords AskMove(Coords[] validMoves)
     {
-        var validSet = new HashSet<Coords>(validMoves);
-
         while (true)
         {
             var raw = AnsiConsole.Ask<string>(_loc.PromptEnterMove);
 
-            if (TryParseCoords(raw, out var coords))
-                return coords;
+            if (!TryParseCoords(raw, out var coords))
+            {
+                ShowError(string.Format(_loc.ErrorInvalidCell, raw));
+                continue;
+            }
 
-            ShowError(string.Format(_loc.ErrorInvalidCell, raw));
+            if (!validMoves.Contains(coords))
+            {
+                ShowError(_loc.ErrorInvalidMove);
+                continue;
+            }
+
+            return coords;
         }
     }
 
-    // ── Приватні методи відображення ──────────────────────────────────────────
+    // ── Меню ─────────────────────────────────────────────────────────────────
 
-    private int ShowMainMenu()
+    /// <summary>
+    /// Показує головне меню і повертає GameSettings або null якщо вихід.
+    /// </summary>
+    private GameSettings? ShowMainMenu()
     {
         Console.Clear();
         DrawTitle();
@@ -141,9 +144,69 @@ public sealed class View : IView
             new SelectionPrompt<string>()
                 .Title($"[bold green]{_loc.MenuNavigationHint}[/]")
                 .HighlightStyle(new Style(Color.Black, Color.Green))
-                .AddChoices(_loc.MenuNewGameLocal, _loc.MenuQuit));
+                .AddChoices(_loc.MenuNewGameLocal, _loc.MenuNewGameNetwork, _loc.MenuQuit));
 
-        return choice == _loc.MenuNewGameLocal ? 0 : 1;
+        if (choice == _loc.MenuQuit)
+            return null;
+
+        if (choice == _loc.MenuNewGameLocal)
+            return new GameSettings { GameType = GameType.Local };
+
+        return ShowNetworkMenu();
+    }
+
+    /// <summary>
+    /// Показує підменю мережевої гри і повертає GameSettings або null якщо назад.
+    /// </summary>
+    private GameSettings? ShowNetworkMenu()
+    {
+        Console.Clear();
+        DrawTitle();
+        AnsiConsole.WriteLine();
+
+        var choice = AnsiConsole.Prompt(
+            new SelectionPrompt<string>()
+                .Title($"[bold green]{_loc.MenuNavigationHint}[/]")
+                .HighlightStyle(new Style(Color.Black, Color.Green))
+                .AddChoices(_loc.MenuNetworkHost, _loc.MenuNetworkClient, _loc.MenuQuit));
+
+        if (choice == _loc.MenuQuit)
+            return null;
+
+        if (choice == _loc.MenuNetworkHost)
+        {
+            var port = AnsiConsole.Ask<ushort>($"[bold green]{_loc.PromptPort}[/]");
+
+            var colorChoice = AnsiConsole.Prompt(
+                new SelectionPrompt<string>()
+                    .Title($"[bold green]{_loc.PromptChooseColor}[/]")
+                    .HighlightStyle(new Style(Color.Black, Color.Green))
+                    .AddChoices(_loc.ColorBlack, _loc.ColorWhite));
+
+            var hostPlayer = colorChoice == _loc.ColorBlack ? Player.Black : Player.White;
+
+            return new GameSettings
+            {
+                GameType = GameType.NetworkHost,
+                HostSettings = new HostSettings { Port = port, HostPlayer = hostPlayer }
+            };
+        }
+        else
+        {
+            var host = AnsiConsole.Prompt(
+    new TextPrompt<string>($"[bold green]{_loc.PromptHost}[/]")
+        .Validate(ip => System.Net.IPAddress.TryParse(ip, out var addr)
+                        && addr.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork
+            ? ValidationResult.Success()
+            : ValidationResult.Error(_loc.ErrorInvalidIp)));
+            var port = AnsiConsole.Ask<ushort>($"[bold green]{_loc.PromptPort}[/]");
+
+            return new GameSettings
+            {
+                GameType = GameType.NetworkClient,
+                ClientSettings = new ClientSettings { Host = host, Port = port }
+            };
+        }
     }
 
     private void ShowGameOver(GameStatus status)
@@ -186,7 +249,7 @@ public sealed class View : IView
         Console.ReadKey(intercept: true);
     }
 
-    // ── Допоміжні методи малювання ────────────────────────────────────────────
+    // ── Допоміжні методи малювання ───────────────────────────────────────────
 
     private static Language PickLanguage()
     {
