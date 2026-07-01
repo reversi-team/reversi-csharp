@@ -2,9 +2,6 @@ using Reversi.View.Models;
 
 namespace Reversi.View.Helpers;
 
-
-
-
 /// <summary>
 /// Усі рядки інтерфейсу для конкретної мови.
 /// Щоб додати нову мову — додай метод за аналогією з English/Ukrainian.
@@ -12,10 +9,19 @@ namespace Reversi.View.Helpers;
 internal sealed class Localization
 {
     // ── Меню ─────────────────────────────────────────────────────────────────
-
     public required string MenuNavigationHint { get; init; }
     public required string MenuNewGameLocal { get; init; }
+    public required string MenuNewGameNetwork { get; init; }
+    public required string MenuNetworkHost { get; init; }
+    public required string MenuNetworkClient { get; init; }
     public required string MenuQuit { get; init; }
+
+    // ── Мережеві налаштування ─────────────────────────────────────────────────
+    public required string PromptPort { get; init; }
+    public required string PromptHost { get; init; }
+    public required string PromptChooseColor { get; init; }
+    public required string ColorBlack { get; init; }
+    public required string ColorWhite { get; init; }
 
     // ── Рахунок і хід ────────────────────────────────────────────────────────
     public required string LabelBlack { get; init; }
@@ -26,6 +32,7 @@ internal sealed class Localization
     // ── Введення ходу ────────────────────────────────────────────────────────
     public required string PromptEnterMove { get; init; }
     public required string ErrorInvalidCell { get; init; }  // {0} = введене значення
+    public required string ErrorInvalidMove { get; init; }  // хід не у списку допустимих
 
     // ── Кінець гри ───────────────────────────────────────────────────────────
     public required string GameOverHeader { get; init; }
@@ -36,11 +43,12 @@ internal sealed class Localization
     public required string PlayAgain { get; init; }
 
     // ── Повідомлення про події під час гри ───────────────────────────────────
+    public required string ErrorInvalidIp { get; init; }
     public required string MsgImpossibleMove { get; init; }
     public required string MsgImpossiblePass { get; init; }
     public required string MsgGameEnded { get; init; }
 
-    // ── Критичні помилки (винятки з контролера) ──────────────────────────────
+    // ── Критичні помилки ─────────────────────────────────────────────────────
     public required string ErrUnknown { get; init; }
 
     // ── Загальне ─────────────────────────────────────────────────────────────
@@ -55,10 +63,19 @@ internal sealed class Localization
 
     private static Localization English() => new()
     {
+        ErrorInvalidIp = "Invalid IP address. Use IPv4 format (e.g. 192.168.1.1).",
         MenuNavigationHint = "Use [↑↓] to navigate, [Enter] to select",
         MenuNewGameLocal = "▶  Local Game",
+        MenuNewGameNetwork = "▶  Network Game",
+        MenuNetworkHost = "▶  Create Game (Host)",
+        MenuNetworkClient = "▶  Join Game (Client)",
         MenuQuit = "✕  Quit",
-       
+
+        PromptPort = "Enter port number:",
+        PromptHost = "Enter host address:",
+        PromptChooseColor = "Choose your color:",
+        ColorBlack = "● Black",
+        ColorWhite = "○ White",
 
         LabelBlack = "● Black",
         LabelWhite = "○ White",
@@ -67,6 +84,7 @@ internal sealed class Localization
 
         PromptEnterMove = "[bold green]>[/] Enter move (e.g. [bold]D3[/]):",
         ErrorInvalidCell = "'{0}' is not a valid cell. Use A–H and 1–8 (e.g. D3).",
+        ErrorInvalidMove = "That cell is not a valid move. Try again.",
 
         GameOverHeader = " Game Over ",
         BlackWins = "  ● Black wins!  ",
@@ -79,17 +97,26 @@ internal sealed class Localization
         MsgImpossiblePass = "No valid moves — turn skipped.",
         MsgGameEnded = "The game has already ended.",
 
-        ErrUnknown = "An unexpected error occurred",
+        ErrUnknown = "An unexpected error occurred.",
 
         PressAnyKey = "  Press any key to continue…",
     };
 
     private static Localization Ukrainian() => new()
     {
+        ErrorInvalidIp = "Невірна IP адреса. Використовуй формат IPv4 (напр. 192.168.1.1).",
         MenuNavigationHint = "Використовуй [↑↓] для навігації, [Enter] для вибору",
         MenuNewGameLocal = "▶  Локальна гра",
+        MenuNewGameNetwork = "▶  Мережева гра",
+        MenuNetworkHost = "▶  Створити гру (хост)",
+        MenuNetworkClient = "▶  Приєднатися до гри (клієнт)",
         MenuQuit = "✕  Вийти",
-        MsgGameEnded = "Гра вже завершена.",
+
+        PromptPort = "Введи номер порту:",
+        PromptHost = "Введи адресу хоста:",
+        PromptChooseColor = "Обери свій колір:",
+        ColorBlack = "● Чорні",
+        ColorWhite = "○ Білі",
 
         LabelBlack = "● Чорні",
         LabelWhite = "○ Білі",
@@ -98,6 +125,7 @@ internal sealed class Localization
 
         PromptEnterMove = "[bold green]>[/] Введи хід (напр. [bold]D3[/]):",
         ErrorInvalidCell = "'{0}' — невірна клітинка. Використовуй A–H та 1–8 (напр. D3).",
+        ErrorInvalidMove = "Ця клітинка не є допустимим ходом. Спробуй інший.",
 
         GameOverHeader = " Гра завершена ",
         BlackWins = "  ● Чорні перемогли!  ",
@@ -108,10 +136,10 @@ internal sealed class Localization
 
         MsgImpossibleMove = "Цей хід неможливий. Спробуй інший.",
         MsgImpossiblePass = "Немає можливих ходів — хід пропущено.",
+        MsgGameEnded = "Гра вже завершена.",
 
-        ErrUnknown = "Сталася неочікувана помилка",
+        ErrUnknown = "Сталася неочікувана помилка.",
 
         PressAnyKey = "  Натисни будь-яку клавішу, щоб продовжити…",
-
     };
 }
