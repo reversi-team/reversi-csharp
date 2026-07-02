@@ -32,7 +32,7 @@ public class Controller<TModel> : IController
     /// <returns><see cref="GameStatus"/> що представляє результат завершеної гри.</returns>
     public static GameState Play(
         GameSettings gameSettings,
-        Action<GameState> drawGame,
+        Action<GameState, Coords[]> drawGame,
         Func<Coords[], Coords> askMove
     )
     {
@@ -57,9 +57,10 @@ public class Controller<TModel> : IController
             throw new UnhandledException("Unhandled exception in Controller!", e);
         }
     }
+
     private static GameState _Play(
         GameSettings gameSettings,
-        Action<GameState> drawGame,
+        Action<GameState, Coords[]> drawGame,
         Func<Coords[], Coords> askMove
     )
     {
@@ -87,7 +88,7 @@ public class Controller<TModel> : IController
     }
 
     private static GameState PlayLocalGame(
-        Action<GameState> drawGame,
+        Action<GameState, Coords[]> drawGame,
         Func<Coords[], Coords> askMove
     )
     {
@@ -105,7 +106,7 @@ public class Controller<TModel> : IController
                 continue;
             }
 
-            drawGame(gameState);
+            drawGame(gameState, possibleMoves);
             var move = askMove(possibleMoves);
             gameState = model.Move(move);
 
@@ -118,7 +119,7 @@ public class Controller<TModel> : IController
 
     private static GameState PlayRemoteGameAsHost(
         HostSettings hostSettings,
-        Action<GameState> drawGame,
+        Action<GameState, Coords[]> drawGame,
         Func<Coords[], Coords> askMove
     )
     {
@@ -135,7 +136,7 @@ public class Controller<TModel> : IController
 
     private static GameState PlayRemoteGameAsClient(
         ClientSettings clientSettings,
-        Action<GameState> drawGame,
+        Action<GameState, Coords[]> drawGame,
         Func<Coords[], Coords> askMove
     )
     {
@@ -152,7 +153,7 @@ public class Controller<TModel> : IController
     private static GameState PlayRemoteGame(
         Network.Network network,
         bool localPlayerMove,
-        Action<GameState> drawGame,
+        Action<GameState, Coords[]> drawGame,
         Func<Coords[], Coords> askMove
     )
     {
@@ -176,10 +177,11 @@ public class Controller<TModel> : IController
                     network.ReceiveMessage<PassMessage>();
                     network.Send(new StatusOkMessage());
                 }
+
                 continue;
             }
 
-            drawGame(gameState);
+            drawGame(gameState, possibleMoves);
 
             var move = localPlayerMove
                 ? askMove(possibleMoves)
@@ -197,6 +199,7 @@ public class Controller<TModel> : IController
                     network.Send(new StatusErrorMessage());
                     throw new ControllerNetworkErrorException(new ProtocolException("Impossible move!"));
                 }
+
                 network.Send(new StatusOkMessage());
             }
 

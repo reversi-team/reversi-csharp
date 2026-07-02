@@ -22,7 +22,7 @@ public interface IController
     /// <returns><see cref="GameStatus"/> що представляє результат завершеної гри.</returns>
     static abstract GameState Play(
         GameSettings gameSettings,
-        Action<GameState> drawGame,
+        Action<GameState, Coords[]> drawGame,
         Func<Coords[], Coords> askMove
     );
 }
