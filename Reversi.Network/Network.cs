@@ -8,7 +8,7 @@ namespace Reversi.Network;
 /// <summary>
 /// Provides a base high-level abstraction for network operations in the Reversi game.
 /// </summary>
-public abstract class Network
+public abstract class Network : IDisposable
 {
     protected NetworkConnection? Connection;
 
@@ -16,6 +16,12 @@ public abstract class Network
     /// Gets a value indicating whether the network connection is currently active and established.
     /// </summary>
     public bool Connected => Connection != null;
+
+    public void Dispose()
+    {
+        Disconnect();
+        GC.SuppressFinalize(this);
+    }
 
     /// <summary>
     /// Closes the active network connection and releases all allocated transport resources.

@@ -8,6 +8,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Reversi.Network", "Reversi.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Reversi.Tests", "Reversi.Tests\Reversi.Tests.csproj", "{B37628D1-19B7-4E56-BA3F-257F3920BB98}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Reversi.Controller", "Reversi.Controller\Reversi.Controller.csproj", "{945644F5-9DB5-4FC1-9A2B-D171525CCF7D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -58,6 +60,18 @@ Global
 		{B37628D1-19B7-4E56-BA3F-257F3920BB98}.Release|x64.Build.0 = Release|Any CPU
 		{B37628D1-19B7-4E56-BA3F-257F3920BB98}.Release|x86.ActiveCfg = Release|Any CPU
 		{B37628D1-19B7-4E56-BA3F-257F3920BB98}.Release|x86.Build.0 = Release|Any CPU
+		{945644F5-9DB5-4FC1-9A2B-D171525CCF7D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{945644F5-9DB5-4FC1-9A2B-D171525CCF7D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{945644F5-9DB5-4FC1-9A2B-D171525CCF7D}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{945644F5-9DB5-4FC1-9A2B-D171525CCF7D}.Debug|x64.Build.0 = Debug|Any CPU
+		{945644F5-9DB5-4FC1-9A2B-D171525CCF7D}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{945644F5-9DB5-4FC1-9A2B-D171525CCF7D}.Debug|x86.Build.0 = Debug|Any CPU
+		{945644F5-9DB5-4FC1-9A2B-D171525CCF7D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{945644F5-9DB5-4FC1-9A2B-D171525CCF7D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{945644F5-9DB5-4FC1-9A2B-D171525CCF7D}.Release|x64.ActiveCfg = Release|Any CPU
+		{945644F5-9DB5-4FC1-9A2B-D171525CCF7D}.Release|x64.Build.0 = Release|Any CPU
+		{945644F5-9DB5-4FC1-9A2B-D171525CCF7D}.Release|x86.ActiveCfg = Release|Any CPU
+		{945644F5-9DB5-4FC1-9A2B-D171525CCF7D}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
