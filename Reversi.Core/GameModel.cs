@@ -30,9 +30,12 @@ public class GameModel : IModel
 
         Board startingBoard = new Board(CloneMatrix(_matrix));
 
-        _state = new GameState { Board = startingBoard,
+        _state = new GameState
+        {
+            Board = startingBoard,
             CurrentGameStatus = GameStatus.Continue,
-            CurrentPlayer = Player.Black };
+            CurrentPlayer = Player.Black
+        };
     }
 
     public GameState CurrentState() { return _state; }
@@ -112,7 +115,10 @@ public class GameModel : IModel
     {
         List<Coords> flipped = new List<Coords>();
 
-        if (cells[start.Y, start.X] != BoardCell.Empty) return flipped; 
+        if (cells[start.Y, start.X] != BoardCell.Empty)
+        {
+            return flipped;
+        }
 
         BoardCell myColor = player.ToCell();
         BoardCell enemyColor = player.Opposite().ToCell();
@@ -188,13 +194,28 @@ public class GameModel : IModel
         {
             for (int x = 0; x < 8; x++)
             {
-                if (_matrix[y, x] == BoardCell.Black) blackCount++;
-                if (_matrix[y, x] == BoardCell.White) whiteCount++;
+                if (_matrix[y, x] == BoardCell.Black)
+                {
+                    blackCount++;
+                }
+
+                if (_matrix[y, x] == BoardCell.White)
+                {
+                    whiteCount++;
+                }
             }
         }
 
-        if (blackCount > whiteCount) return GameStatus.BlackWin;
-        if (whiteCount > blackCount) return GameStatus.WhiteWin;
+        if (blackCount > whiteCount)
+        {
+            return GameStatus.BlackWin;
+        }
+
+        if (whiteCount > blackCount)
+        {
+            return GameStatus.WhiteWin;
+        }
+
         return GameStatus.Draw;
     }
 
