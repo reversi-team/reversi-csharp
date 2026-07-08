@@ -1,23 +1,25 @@
 using System.Collections.Generic;
+using Reversi.Core;
 
-namespace Reversi.Core;
+namespace Reversi.Model;
 
 public class GameModel : IModel
 {
-    private GameState _state;
+    private const int BOARD_SIZE = 8;
 
+    private GameState _state;
     private readonly BoardCell[,] _matrix;
 
-    private readonly int[] _moveX = { 0, 0, 1, -1, 1, 1, -1, -1 };
-    private readonly int[] _moveY = { 1, -1, 0, 0, 1, -1, 1, -1 };
+    private static readonly int[] _moveX = { 0, 0, 1, -1, 1, 1, -1, -1 };
+    private static readonly int[] _moveY = { 1, -1, 0, 0, 1, -1, 1, -1 };
 
     public GameModel()
     {
-        _matrix = new BoardCell[8, 8];
+        _matrix = new BoardCell[BOARD_SIZE, BOARD_SIZE];
 
-        for (int y = 0; y < 8; y++)
+        for (int y = 0; y < BOARD_SIZE; y++)
         {
-            for (int x = 0; x < 8; x++)
+            for (int x = 0; x < BOARD_SIZE; x++)
             {
                 _matrix[y, x] = BoardCell.Empty;
             }
@@ -42,15 +44,19 @@ public class GameModel : IModel
 
     public Coords[] PossibleMoves()
     {
+        return GetPossibleMovesList(_state.CurrentPlayer).ToArray();
+    }
+
+    private List<Coords> GetPossibleMovesList(Player player)
+    {
         List<Coords> moves = new List<Coords>();
 
-        for (byte y = 0; y < 8; y++)
+        for (byte y = 0; y < BOARD_SIZE; y++)
         {
-            for (byte x = 0; x < 8; x++)
+            for (byte x = 0; x < BOARD_SIZE; x++)
             {
                 Coords currentCoords = new Coords(x, y);
-
-                List<Coords> flipped = GetFlippedPieces(currentCoords, _state.CurrentPlayer, _matrix);
+                List<Coords> flipped = GetFlippedPieces(currentCoords, player);
 
                 if (flipped.Count > 0)
                 {
@@ -59,7 +65,7 @@ public class GameModel : IModel
             }
         }
 
-        return moves.ToArray();
+        return moves;
     }
 
     public GameState Move(Coords coords)
@@ -69,7 +75,7 @@ public class GameModel : IModel
             throw new GameEndedException("Гра вже завершена");
         }
 
-        List<Coords> flipped = GetFlippedPieces(coords, _state.CurrentPlayer, _matrix);
+        List<Coords> flipped = GetFlippedPieces(coords, _state.CurrentPlayer);
 
         if (flipped.Count == 0)
         {
@@ -91,7 +97,6 @@ public class GameModel : IModel
         return _state;
     }
 
-
     public GameState Pass()
     {
         if (_state.CurrentGameStatus != GameStatus.Continue)
@@ -111,11 +116,16 @@ public class GameModel : IModel
         return _state;
     }
 
-    private List<Coords> GetFlippedPieces(Coords start, Player player, BoardCell[,] cells)
+    private List<Coords> GetFlippedPieces(Coords start, Player player)
     {
+        if (start.X >= BOARD_SIZE || start.Y >= BOARD_SIZE)
+        {
+            throw new ArgumentOutOfRangeException(nameof(start), "Координати знаходяться поза межами поля");
+        }
+
         List<Coords> flipped = new List<Coords>();
 
-        if (cells[start.Y, start.X] != BoardCell.Empty)
+        if (_matrix[start.Y, start.X] != BoardCell.Empty)
         {
             return flipped;
         }
@@ -123,21 +133,21 @@ public class GameModel : IModel
         BoardCell myColor = player.ToCell();
         BoardCell enemyColor = player.Opposite().ToCell();
 
-        for (int i = 0; i < 8; i++)
+        for (int i = 0; i < _moveX.Length; i++)
         {
             List<Coords> line = new List<Coords>();
 
             int currentX = start.X + _moveX[i];
             int currentY = start.Y + _moveY[i];
 
-            while (currentX >= 0 && currentX < 8 && currentY >= 0 && currentY < 8 && cells[currentY, currentX] == enemyColor)
+            while (currentX >= 0 && currentX < BOARD_SIZE && currentY >= 0 && currentY < BOARD_SIZE && _matrix[currentY, currentX] == enemyColor)
             {
                 line.Add(new Coords((byte)currentX, (byte)currentY));
                 currentX += _moveX[i];
                 currentY += _moveY[i];
             }
 
-            if (currentX >= 0 && currentX < 8 && currentY >= 0 && currentY < 8 && cells[currentY, currentX] == myColor && line.Count > 0)
+            if (currentX >= 0 && currentX < BOARD_SIZE && currentY >= 0 && currentY < BOARD_SIZE && _matrix[currentY, currentX] == myColor && line.Count > 0)
             {
                 flipped.AddRange(line);
             }
@@ -148,19 +158,7 @@ public class GameModel : IModel
 
     private bool HasAnyMoves(Player player)
     {
-        for (byte y = 0; y < 8; y++)
-        {
-            for (byte x = 0; x < 8; x++)
-            {
-                Coords coords = new Coords(x, y);
-                List<Coords> flipped = GetFlippedPieces(coords, player, _matrix);
-                if (flipped.Count > 0)
-                {
-                    return true;
-                }
-            }
-        }
-        return false;
+        return GetPossibleMovesList(player).Count > 0;
     }
 
     private void UpdateGameState(Player nextPlayer)
@@ -190,9 +188,9 @@ public class GameModel : IModel
         int blackCount = 0;
         int whiteCount = 0;
 
-        for (int y = 0; y < 8; y++)
+        for (int y = 0; y < BOARD_SIZE; y++)
         {
-            for (int x = 0; x < 8; x++)
+            for (int x = 0; x < BOARD_SIZE; x++)
             {
                 if (_matrix[y, x] == BoardCell.Black)
                 {
@@ -221,7 +219,7 @@ public class GameModel : IModel
 
     private BoardCell[,] CloneMatrix(BoardCell[,] source)
     {
-        BoardCell[,] clone = new BoardCell[8, 8];
+        BoardCell[,] clone = new BoardCell[BOARD_SIZE, BOARD_SIZE];
         Array.Copy(source, clone, source.Length);
         return clone;
     }
