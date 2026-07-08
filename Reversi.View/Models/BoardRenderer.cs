@@ -10,7 +10,7 @@ internal static class BoardRenderer
 {
     private static readonly string[] ColLabels = ["A", "B", "C", "D", "E", "F", "G", "H"];
 
-    internal static Table BuildTable(Board board, IReadOnlySet<Coords> validMoves)
+    internal static Table BuildTable(Board board, Coords[] validMoves)
     {
         var table = new Table()
             .Border(TableBorder.Rounded)
@@ -27,7 +27,7 @@ internal static class BoardRenderer
             for (int col = 0; col < 8; col++)
             {
                 var coords = new Coords((byte)col, (byte)row);
-                bool isValid = validMoves.Contains(coords);
+                bool isValid = Array.IndexOf(validMoves, coords) >= 0;
                 cells.Add(RenderCell(board[row, col], isValid));
             }
 

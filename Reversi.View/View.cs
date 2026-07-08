@@ -96,7 +96,7 @@ public sealed class View : IView
         DrawScorePanel(state);
         AnsiConsole.WriteLine();
 
-        var table = BoardRenderer.BuildTable(state.Board, new HashSet<Coords>());
+        var table = BoardRenderer.BuildTable(state.Board, Array.Empty<Coords>());
         AnsiConsole.Write(table);
 
         AnsiConsole.WriteLine();
