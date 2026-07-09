@@ -1,3 +1,4 @@
+
 using System.Text;
 using Reversi.Core;
 using Reversi.View.Helpers;
