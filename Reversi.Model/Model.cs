@@ -3,9 +3,9 @@ using Reversi.Core;
 
 namespace Reversi.Model;
 
-public class GameModel : IModel
+public class Model : IModel
 {
-    private const int BOARD_SIZE = 8;
+    private const int _boardSize = 8;
 
     private GameState _state;
     private readonly BoardCell[,] _matrix;
@@ -13,13 +13,13 @@ public class GameModel : IModel
     private static readonly int[] _moveX = { 0, 0, 1, -1, 1, 1, -1, -1 };
     private static readonly int[] _moveY = { 1, -1, 0, 0, 1, -1, 1, -1 };
 
-    public GameModel()
+    public Model()
     {
-        _matrix = new BoardCell[BOARD_SIZE, BOARD_SIZE];
+        _matrix = new BoardCell[_boardSize, _boardSize];
 
-        for (int y = 0; y < BOARD_SIZE; y++)
+        for (int y = 0; y < _boardSize; y++)
         {
-            for (int x = 0; x < BOARD_SIZE; x++)
+            for (int x = 0; x < _boardSize; x++)
             {
                 _matrix[y, x] = BoardCell.Empty;
             }
@@ -51,9 +51,9 @@ public class GameModel : IModel
     {
         List<Coords> moves = new List<Coords>();
 
-        for (byte y = 0; y < BOARD_SIZE; y++)
+        for (byte y = 0; y < _boardSize; y++)
         {
-            for (byte x = 0; x < BOARD_SIZE; x++)
+            for (byte x = 0; x < _boardSize; x++)
             {
                 Coords currentCoords = new Coords(x, y);
                 List<Coords> flipped = GetFlippedPieces(currentCoords, player);
@@ -118,7 +118,7 @@ public class GameModel : IModel
 
     private List<Coords> GetFlippedPieces(Coords start, Player player)
     {
-        if (start.X >= BOARD_SIZE || start.Y >= BOARD_SIZE)
+        if (start.X >= _boardSize || start.Y >= _boardSize)
         {
             throw new ArgumentOutOfRangeException(nameof(start), "Координати знаходяться поза межами поля");
         }
@@ -140,14 +140,14 @@ public class GameModel : IModel
             int currentX = start.X + _moveX[i];
             int currentY = start.Y + _moveY[i];
 
-            while (currentX >= 0 && currentX < BOARD_SIZE && currentY >= 0 && currentY < BOARD_SIZE && _matrix[currentY, currentX] == enemyColor)
+            while (currentX >= 0 && currentX < _boardSize && currentY >= 0 && currentY < _boardSize && _matrix[currentY, currentX] == enemyColor)
             {
                 line.Add(new Coords((byte)currentX, (byte)currentY));
                 currentX += _moveX[i];
                 currentY += _moveY[i];
             }
 
-            if (currentX >= 0 && currentX < BOARD_SIZE && currentY >= 0 && currentY < BOARD_SIZE && _matrix[currentY, currentX] == myColor && line.Count > 0)
+            if (currentX >= 0 && currentX < _boardSize && currentY >= 0 && currentY < _boardSize && _matrix[currentY, currentX] == myColor && line.Count > 0)
             {
                 flipped.AddRange(line);
             }
@@ -188,9 +188,9 @@ public class GameModel : IModel
         int blackCount = 0;
         int whiteCount = 0;
 
-        for (int y = 0; y < BOARD_SIZE; y++)
+        for (int y = 0; y < _boardSize; y++)
         {
-            for (int x = 0; x < BOARD_SIZE; x++)
+            for (int x = 0; x < _boardSize; x++)
             {
                 if (_matrix[y, x] == BoardCell.Black)
                 {
@@ -219,7 +219,7 @@ public class GameModel : IModel
 
     private BoardCell[,] CloneMatrix(BoardCell[,] source)
     {
-        BoardCell[,] clone = new BoardCell[BOARD_SIZE, BOARD_SIZE];
+        BoardCell[,] clone = new BoardCell[_boardSize, _boardSize];
         Array.Copy(source, clone, source.Length);
         return clone;
     }

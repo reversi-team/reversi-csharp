@@ -8,7 +8,7 @@ namespace Reversi.View.Helpers;
 /// </summary>
 internal static class BoardRenderer
 {
-    private static readonly string[] ColLabels = ["A", "B", "C", "D", "E", "F", "G", "H"];
+    private static readonly string[] _colLabels = ["A", "B", "C", "D", "E", "F", "G", "H"];
 
     internal static Table BuildTable(Board board, Coords[] validMoves)
     {
@@ -17,8 +17,10 @@ internal static class BoardRenderer
             .BorderColor(Color.Green)
             .AddColumn(new TableColumn("[grey]  [/]").Centered());
 
-        foreach (var label in ColLabels)
+        foreach (var label in _colLabels)
+        {
             table.AddColumn(new TableColumn($"[bold green] {label} [/]").Centered());
+        }
 
         for (int row = 0; row < 8; row++)
         {

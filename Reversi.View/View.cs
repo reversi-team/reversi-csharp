@@ -20,7 +20,7 @@ namespace Reversi.View;
 public sealed class View<TController> : IView<TController> where TController : IController
 {
     // ── ASCII art (Figlet "Big") ──────────────────────────────────────────────
-    private const string Title =
+    private const string _title =
         """
          _____  ________      ________ _____   _____ _____
         |  __ \|  ____\ \    / /  ____|  __ \ / ____|_   _|
@@ -46,7 +46,10 @@ public sealed class View<TController> : IView<TController> where TController : I
         while (true)
         {
             var settings = ShowMainMenu();
-            if (settings is null) break;
+            if (settings is null)
+            {
+                break;
+            }
 
             try
             {
@@ -79,7 +82,10 @@ public sealed class View<TController> : IView<TController> where TController : I
                 Pause();
             }
 
-            if (!AskPlayAgain()) break;
+            if (!AskPlayAgain())
+            {
+                break;
+            }
         }
 
         return 0;
@@ -149,10 +155,14 @@ public sealed class View<TController> : IView<TController> where TController : I
                 .AddChoices(_loc.MenuNewGameLocal, _loc.MenuNewGameNetwork, _loc.MenuQuit));
 
         if (choice == _loc.MenuQuit)
+        {
             return null;
+        }
 
         if (choice == _loc.MenuNewGameLocal)
+        {
             return new GameSettings { GameType = GameType.Local };
+        }
 
         return ShowNetworkMenu();
     }
@@ -173,7 +183,9 @@ public sealed class View<TController> : IView<TController> where TController : I
                 .AddChoices(_loc.MenuNetworkHost, _loc.MenuNetworkClient, _loc.MenuQuit));
 
         if (choice == _loc.MenuQuit)
+        {
             return null;
+        }
 
         if (choice == _loc.MenuNetworkHost)
         {
@@ -256,7 +268,7 @@ public sealed class View<TController> : IView<TController> where TController : I
     private static Language PickLanguage()
     {
         Console.Clear();
-        AnsiConsole.MarkupLine($"[bold green]{Markup.Escape(Title)}[/]");
+        AnsiConsole.MarkupLine($"[bold green]{Markup.Escape(_title)}[/]");
         AnsiConsole.WriteLine();
 
         var choice = AnsiConsole.Prompt(
@@ -270,7 +282,7 @@ public sealed class View<TController> : IView<TController> where TController : I
 
     private static void DrawTitle()
     {
-        AnsiConsole.MarkupLine($"[bold green]{Markup.Escape(Title)}[/]");
+        AnsiConsole.MarkupLine($"[bold green]{Markup.Escape(_title)}[/]");
     }
 
     private void DrawScorePanel(GameState state)
@@ -302,12 +314,26 @@ public sealed class View<TController> : IView<TController> where TController : I
         coords = default;
 
         var clean = raw.Trim().ToUpperInvariant().Replace(" ", "");
-        if (clean.Length < 2) return false;
+        if (clean.Length < 2)
+        {
+            return false;
+        }
 
         char colChar = clean[0];
-        if (colChar < 'A' || colChar > 'H') return false;
-        if (!int.TryParse(clean[1..], out int rowNum)) return false;
-        if (rowNum < 1 || rowNum > 8) return false;
+        if (colChar < 'A' || colChar > 'H')
+        {
+            return false;
+        }
+
+        if (!int.TryParse(clean[1..], out int rowNum))
+        {
+            return false;
+        }
+
+        if (rowNum < 1 || rowNum > 8)
+        {
+            return false;
+        }
 
         coords = new Coords((byte)(colChar - 'A'), (byte)(rowNum - 1));
         return true;
