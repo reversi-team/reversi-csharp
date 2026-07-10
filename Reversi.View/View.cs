@@ -1,4 +1,3 @@
-
 using System.Text;
 using Reversi.Core;
 using Reversi.View.Helpers;
@@ -18,16 +17,16 @@ namespace Reversi.View;
 /// - Винятки з контролера перехоплюються у View і відображаються
 ///   локалізованим повідомленням
 /// </summary>
-public sealed class View : IView
+public sealed class View<TController> : IView<TController> where TController : IController
 {
     // ── ASCII art (Figlet "Big") ──────────────────────────────────────────────
     private const string Title =
         """
-         _____  ________      ________ _____   _____ _____ 
+         _____  ________      ________ _____   _____ _____
         |  __ \|  ____\ \    / /  ____|  __ \ / ____|_   _|
-        | |__) | |__   \ \  / /| |__  | |__) | (___   | |  
-        |  _  /|  __|   \ \/ / |  __| |  _  / \___ \  | |  
-        | | \ \| |____   \  /  | |____| | \ \ ____) |_| |_ 
+        | |__) | |__   \ \  / /| |__  | |__) | (___   | |
+        |  _  /|  __|   \ \/ / |  __| |  _  / \___ \  | |
+        | | \ \| |____   \  /  | |____| | \ \ ____) |_| |_
         |_|  \_\______|   \/   |______|_|  \_\_____/|_____|
         """;
 
@@ -37,7 +36,7 @@ public sealed class View : IView
     // ── IView ─────────────────────────────────────────────────────────────────
 
     /// <inheritdoc/>
-    public void Main<TController>() where TController : IController
+    public int Main(string[] args)
     {
         Console.OutputEncoding = Encoding.UTF8;
         Console.InputEncoding = Encoding.UTF8;
@@ -82,6 +81,8 @@ public sealed class View : IView
 
             if (!AskPlayAgain()) break;
         }
+
+        return 0;
     }
 
     // ── Делегати які передаються в Controller.Play ────────────────────────────
@@ -89,7 +90,7 @@ public sealed class View : IView
     /// <summary>
     /// Малює поточний стан гри. Передається контролеру як делегат drawGame.
     /// </summary>
-    private void ShowGameState(GameState state)
+    private void ShowGameState(GameState state, Coords[] validMoves)
     {
         Console.Clear();
         DrawTitle();
@@ -97,7 +98,7 @@ public sealed class View : IView
         DrawScorePanel(state);
         AnsiConsole.WriteLine();
 
-        var table = BoardRenderer.BuildTable(state.Board, Array.Empty<Coords>());
+        var table = BoardRenderer.BuildTable(state.Board, validMoves);
         AnsiConsole.Write(table);
 
         AnsiConsole.WriteLine();
@@ -195,11 +196,11 @@ public sealed class View : IView
         else
         {
             var host = AnsiConsole.Prompt(
-    new TextPrompt<string>($"[bold green]{_loc.PromptHost}[/]")
-        .Validate(ip => System.Net.IPAddress.TryParse(ip, out var addr)
-                        && addr.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork
-            ? ValidationResult.Success()
-            : ValidationResult.Error(_loc.ErrorInvalidIp)));
+                new TextPrompt<string>($"[bold green]{_loc.PromptHost}[/]")
+                    .Validate(ip => System.Net.IPAddress.TryParse(ip, out var addr)
+                                    && addr.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork
+                        ? ValidationResult.Success()
+                        : ValidationResult.Error(_loc.ErrorInvalidIp)));
             var port = AnsiConsole.Ask<ushort>($"[bold green]{_loc.PromptPort}[/]");
 
             return new GameSettings
