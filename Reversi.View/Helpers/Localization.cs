@@ -64,7 +64,7 @@ internal sealed class Localization
     private static Localization English() => new()
     {
         ErrorInvalidIp = "Invalid IP address. Use IPv4 format (e.g. 192.168.1.1).",
-        MenuNavigationHint = "Use [↑↓] to navigate, [Enter] to select",
+        MenuNavigationHint = "Use [[↑↓]] to navigate, [[Enter]] to select",
         MenuNewGameLocal = "▶  Local Game",
         MenuNewGameNetwork = "▶  Network Game",
         MenuNetworkHost = "▶  Create Game (Host)",
@@ -105,7 +105,7 @@ internal sealed class Localization
     private static Localization Ukrainian() => new()
     {
         ErrorInvalidIp = "Невірна IP адреса. Використовуй формат IPv4 (напр. 192.168.1.1).",
-        MenuNavigationHint = "Використовуй [↑↓] для навігації, [Enter] для вибору",
+        MenuNavigationHint = "Використовуй [[↑↓]] для навігації, [[Enter]] для вибору",
         MenuNewGameLocal = "▶  Локальна гра",
         MenuNewGameNetwork = "▶  Мережева гра",
         MenuNetworkHost = "▶  Створити гру (хост)",
