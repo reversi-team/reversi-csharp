@@ -2,8 +2,9 @@ namespace Reversi;
 
 internal static class Program
 {
-    public static void Main(string[] args)
+    public static int Main(string[] args)
     {
-        Console.WriteLine("Hello, Reversi!");
+        var view = new View.View<Controller.Controller<Model.Model>>();
+        return view.Main(args);
     }
 }

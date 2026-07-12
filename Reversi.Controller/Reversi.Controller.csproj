@@ -1,17 +1,14 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <OutputType>Exe</OutputType>
         <TargetFramework>net10.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Reversi.Controller\Reversi.Controller.csproj" />
       <ProjectReference Include="..\Reversi.Core\Reversi.Core.csproj" />
-      <ProjectReference Include="..\Reversi.Model\Reversi.Model.csproj" />
-      <ProjectReference Include="..\Reversi.View\Reversi.View.csproj" />
+      <ProjectReference Include="..\Reversi.Network\Reversi.Network.csproj" />
     </ItemGroup>
 
 </Project>
