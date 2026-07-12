@@ -7,8 +7,8 @@ namespace Reversi.Core;
 /// </summary>
 public enum Player : byte
 {
-    White,
-    Black
+    White = 0,
+    Black = 1
 }
 
 public static class PlayerExtensions
@@ -50,10 +50,10 @@ public static class PlayerExtensions
 /// </summary>
 public enum GameStatus : byte
 {
-    Continue,
-    Draw,
-    WhiteWin,
-    BlackWin
+    Continue = 0,
+    Draw = 1,
+    WhiteWin = 2,
+    BlackWin = 3
 }
 
 /// <summary>
@@ -66,11 +66,11 @@ public record struct Coords(byte X, byte Y);
 /// <summary>
 /// Стан клітинки на ігровому полі.
 /// </summary>
-public enum BoardCell
+public enum BoardCell : byte
 {
-    Empty,
-    White,
-    Black
+    Empty = 0,
+    White = 1,
+    Black = 2
 }
 
 /// <summary>
@@ -135,9 +135,9 @@ public class GameState
 /// </summary>
 public enum GameType : byte
 {
-    Local,
-    NetworkHost,
-    NetworkClient
+    Local = 0,
+    NetworkHost = 1,
+    NetworkClient = 2
 }
 
 /// <summary>

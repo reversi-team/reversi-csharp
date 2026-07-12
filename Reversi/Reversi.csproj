@@ -8,7 +8,10 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\Reversi.Controller\Reversi.Controller.csproj" />
       <ProjectReference Include="..\Reversi.Core\Reversi.Core.csproj" />
+      <ProjectReference Include="..\Reversi.Model\Reversi.Model.csproj" />
+      <ProjectReference Include="..\Reversi.View\Reversi.View.csproj" />
     </ItemGroup>
 
 </Project>
