@@ -12,31 +12,35 @@ namespace Reversi.View;
 /// Архітектура:
 /// - View.Main() повністю керує потоком програми (меню, цикл ігор, вихід)
 /// - Під час гри View передає контролеру делегати:
-///     drawGame — контролер викликає щоб оновити дошку на екрані
-///     askMove  — контролер викликає щоб отримати хід від гравця
+///     drawGame — малює дошку через AnsiConsole.Live (без блимання)
+///     askMove  — читає хід після того як Live завершився
 /// - Винятки з контролера перехоплюються у View і відображаються
 ///   локалізованим повідомленням
 /// </summary>
-public sealed class View<TController> : IView<TController> where TController : IController
+public sealed class View : IView
 {
-    // ── ASCII art (Figlet "Big") ──────────────────────────────────────────────
-    private const string _title =
+    // ── ASCII art ──────────────────────────────────────────────
+    private const string Title =
         """
-         _____  ________      ________ _____   _____ _____
+         _____  ________      ________ _____   _____ _____ 
         |  __ \|  ____\ \    / /  ____|  __ \ / ____|_   _|
-        | |__) | |__   \ \  / /| |__  | |__) | (___   | |
-        |  _  /|  __|   \ \/ / |  __| |  _  / \___ \  | |
-        | | \ \| |____   \  /  | |____| | \ \ ____) |_| |_
+        | |__) | |__   \ \  / /| |__  | |__) | (___   | |  
+        |  _  /|  __|   \ \/ / |  __| |  _  / \___ \  | |  
+        | | \ \| |____   \  /  | |____| | \ \ ____) |_| |_ 
         |_|  \_\______|   \/   |______|_|  \_\_____/|_____|
         """;
 
     // ── Стан ─────────────────────────────────────────────────────────────────
     private Localization _loc = Localization.For(Language.English);
 
+ 
+    private GameState? _currentState;
+    private Coords[] _currentValidMoves = [];
+
     // ── IView ─────────────────────────────────────────────────────────────────
 
-    /// <inheritdoc/>
-    public int Main(string[] args)
+    
+    public void Main<TController>() where TController : IController
     {
         Console.OutputEncoding = Encoding.UTF8;
         Console.InputEncoding = Encoding.UTF8;
@@ -46,10 +50,7 @@ public sealed class View<TController> : IView<TController> where TController : I
         while (true)
         {
             var settings = ShowMainMenu();
-            if (settings is null)
-            {
-                break;
-            }
+            if (settings is null) break;
 
             try
             {
@@ -82,41 +83,52 @@ public sealed class View<TController> : IView<TController> where TController : I
                 Pause();
             }
 
-            if (!AskPlayAgain())
-            {
-                break;
-            }
+            if (!AskPlayAgain()) break;
         }
-
-        return 0;
     }
 
     // ── Делегати які передаються в Controller.Play ────────────────────────────
 
     /// <summary>
-    /// Малює поточний стан гри. Передається контролеру як делегат drawGame.
+    /// Малює поточний стан гри через AnsiConsole.Live — без блимання.
+    /// Загортає дошку і статус у Panel для єдиного фону.
     /// </summary>
-    private void ShowGameState(GameState state, Coords[] validMoves)
+    private void ShowGameState(GameState state)
     {
-        Console.Clear();
-        DrawTitle();
-        AnsiConsole.WriteLine();
-        DrawScorePanel(state);
-        AnsiConsole.WriteLine();
+        _currentState = state;
 
-        var table = BoardRenderer.BuildTable(state.Board, validMoves);
-        AnsiConsole.Write(table);
+        var panel = BuildGamePanel(state, _currentValidMoves);
 
-        AnsiConsole.WriteLine();
-        DrawCurrentPlayerPrompt(state.CurrentPlayer);
+        AnsiConsole.Live(panel)
+            .AutoClear(false)
+            .Start(ctx =>
+            {
+                ctx.UpdateTarget(BuildGamePanel(state, _currentValidMoves));
+                ctx.Refresh();
+            });
     }
 
     /// <summary>
-    /// Читає хід від гравця. Передається контролеру як делегат askMove.
+    /// Читає хід від гравця після оновлення дошки.
     /// Перевіряє що введені координати є у списку допустимих ходів.
     /// </summary>
     private Coords AskMove(Coords[] validMoves)
     {
+        _currentValidMoves = validMoves;
+
+   
+        if (_currentState is not null)
+        {
+            var panel = BuildGamePanel(_currentState, validMoves);
+            AnsiConsole.Live(panel)
+                .AutoClear(false)
+                .Start(ctx =>
+                {
+                    ctx.UpdateTarget(BuildGamePanel(_currentState, validMoves));
+                    ctx.Refresh();
+                });
+        }
+
         while (true)
         {
             var raw = AnsiConsole.Ask<string>(_loc.PromptEnterMove);
@@ -137,11 +149,37 @@ public sealed class View<TController> : IView<TController> where TController : I
         }
     }
 
+    // ── Будує Panel з дошкою і статусом ─────────────────────────────────────
+
+    private Panel BuildGamePanel(GameState state, Coords[] validMoves)
+    {
+        var grid = new Grid();
+        grid.AddColumn();
+
+      
+        var playerTag = state.CurrentPlayer == Player.Black
+            ? $"[bold black on white] {_loc.LabelBlack} [/]"
+            : $"[bold white on grey] {_loc.LabelWhite} [/]";
+
+        var scoreText = new Markup(
+            $"  [bold white]{_loc.LabelBlack}:[/] [green]{state.Board.BlackCells}[/]   " +
+            $"[bold white]{_loc.LabelWhite}:[/] [green]{state.Board.WhiteCells}[/]   " +
+            $"[grey]|[/]   {_loc.LabelTurn}: {playerTag}   " +
+            $"[grey]{_loc.LabelToMove}[/]");
+
+        grid.AddRow(scoreText);
+        grid.AddRow(new Text(""));
+        grid.AddRow(BoardRenderer.BuildTable(state.Board, validMoves));
+
+        return new Panel(grid)
+            .Border(BoxBorder.Rounded)
+            .BorderColor(Color.Green)
+            .Header($"[bold green] REVERSI [/]", Justify.Center)
+            .Padding(1, 0);
+    }
+
     // ── Меню ─────────────────────────────────────────────────────────────────
 
-    /// <summary>
-    /// Показує головне меню і повертає GameSettings або null якщо вихід.
-    /// </summary>
     private GameSettings? ShowMainMenu()
     {
         Console.Clear();
@@ -155,21 +193,14 @@ public sealed class View<TController> : IView<TController> where TController : I
                 .AddChoices(_loc.MenuNewGameLocal, _loc.MenuNewGameNetwork, _loc.MenuQuit));
 
         if (choice == _loc.MenuQuit)
-        {
             return null;
-        }
 
         if (choice == _loc.MenuNewGameLocal)
-        {
             return new GameSettings { GameType = GameType.Local };
-        }
 
         return ShowNetworkMenu();
     }
 
-    /// <summary>
-    /// Показує підменю мережевої гри і повертає GameSettings або null якщо назад.
-    /// </summary>
     private GameSettings? ShowNetworkMenu()
     {
         Console.Clear();
@@ -183,9 +214,7 @@ public sealed class View<TController> : IView<TController> where TController : I
                 .AddChoices(_loc.MenuNetworkHost, _loc.MenuNetworkClient, _loc.MenuQuit));
 
         if (choice == _loc.MenuQuit)
-        {
             return null;
-        }
 
         if (choice == _loc.MenuNetworkHost)
         {
@@ -213,6 +242,7 @@ public sealed class View<TController> : IView<TController> where TController : I
                                     && addr.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork
                         ? ValidationResult.Success()
                         : ValidationResult.Error(_loc.ErrorInvalidIp)));
+
             var port = AnsiConsole.Ask<ushort>($"[bold green]{_loc.PromptPort}[/]");
 
             return new GameSettings
@@ -225,8 +255,6 @@ public sealed class View<TController> : IView<TController> where TController : I
 
     private void ShowGameOver(GameStatus status)
     {
-        Console.Clear();
-        DrawTitle();
         AnsiConsole.WriteLine();
 
         var resultText = status switch
@@ -263,12 +291,12 @@ public sealed class View<TController> : IView<TController> where TController : I
         Console.ReadKey(intercept: true);
     }
 
-    // ── Допоміжні методи малювання ───────────────────────────────────────────
+    // ── Допоміжні методи ─────────────────────────────────────────────────────
 
     private static Language PickLanguage()
     {
         Console.Clear();
-        AnsiConsole.MarkupLine($"[bold green]{Markup.Escape(_title)}[/]");
+        AnsiConsole.MarkupLine($"[bold green]{Markup.Escape(Title)}[/]");
         AnsiConsole.WriteLine();
 
         var choice = AnsiConsole.Prompt(
@@ -282,58 +310,20 @@ public sealed class View<TController> : IView<TController> where TController : I
 
     private static void DrawTitle()
     {
-        AnsiConsole.MarkupLine($"[bold green]{Markup.Escape(_title)}[/]");
+        AnsiConsole.MarkupLine($"[bold green]{Markup.Escape(Title)}[/]");
     }
 
-    private void DrawScorePanel(GameState state)
-    {
-        var playerTag = state.CurrentPlayer == Player.Black
-            ? $"[bold black on white] {_loc.LabelBlack} [/]"
-            : $"[bold white on grey] {_loc.LabelWhite} [/]";
-
-        AnsiConsole.MarkupLine(
-            $"  [bold white]{_loc.LabelBlack}:[/] [green]{state.Board.BlackCells}[/]   " +
-            $"[bold white]{_loc.LabelWhite}:[/] [green]{state.Board.WhiteCells}[/]   " +
-            $"[grey]|[/]   {_loc.LabelTurn}: {playerTag}");
-    }
-
-    private void DrawCurrentPlayerPrompt(Player player)
-    {
-        var label = player == Player.Black
-            ? $"[bold black on white] {_loc.LabelBlack} [/]"
-            : $"[bold white on grey] {_loc.LabelWhite} [/]";
-
-        AnsiConsole.MarkupLine($"  {label} [grey]{_loc.LabelToMove}[/]");
-    }
-
-    /// <summary>
-    /// Парсить "D3", "d3" тощо у Coords з Core (0-based X=col, Y=row).
-    /// </summary>
     private static bool TryParseCoords(string raw, out Coords coords)
     {
         coords = default;
 
         var clean = raw.Trim().ToUpperInvariant().Replace(" ", "");
-        if (clean.Length < 2)
-        {
-            return false;
-        }
+        if (clean.Length < 2) return false;
 
         char colChar = clean[0];
-        if (colChar < 'A' || colChar > 'H')
-        {
-            return false;
-        }
-
-        if (!int.TryParse(clean[1..], out int rowNum))
-        {
-            return false;
-        }
-
-        if (rowNum < 1 || rowNum > 8)
-        {
-            return false;
-        }
+        if (colChar < 'A' || colChar > 'H') return false;
+        if (!int.TryParse(clean[1..], out int rowNum)) return false;
+        if (rowNum < 1 || rowNum > 8) return false;
 
         coords = new Coords((byte)(colChar - 'A'), (byte)(rowNum - 1));
         return true;
