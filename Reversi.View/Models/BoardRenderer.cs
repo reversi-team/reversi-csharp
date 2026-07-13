@@ -15,16 +15,17 @@ internal static class BoardRenderer
         var table = new Table()
             .Border(TableBorder.Rounded)
             .BorderColor(Color.Green)
-            .AddColumn(new TableColumn("[grey]  [/]").Centered());
+          
+            .AddColumn(new TableColumn("[grey on darkgreen]  [/]").Centered());
 
         foreach (var label in _colLabels)
         {
-            table.AddColumn(new TableColumn($"[bold green] {label} [/]").Centered());
+            table.AddColumn(new TableColumn($"[bold green on darkgreen] {label} [/]").Centered());
         }
 
         for (int row = 0; row < 8; row++)
         {
-            var cells = new List<string> { $"[bold grey]{row + 1}[/]" };
+            var cells = new List<string> { $"[bold grey on darkgreen]{row + 1}[/]" };
 
             for (int col = 0; col < 8; col++)
             {
@@ -41,8 +42,8 @@ internal static class BoardRenderer
 
     private static string RenderCell(BoardCell cell, bool isValid) => cell switch
     {
-        BoardCell.Black => "[black on white] ● [/]",
-        BoardCell.White => "[white on grey] ○ [/]",
-        _ => isValid ? "[bold yellow] · [/]" : "[grey]   [/]"
+        BoardCell.Black => "[black on darkgreen] ● [/]",
+        BoardCell.White => "[white on darkgreen] ○ [/]",
+        _ => isValid ? "[bold white on darkgreen] · [/]" : "[grey on darkgreen]   [/]"
     };
 }
