@@ -142,13 +142,13 @@ public sealed class View<TController> : IView<TController> where TController : I
         grid.AddColumn();
 
     var playerTag = state.CurrentPlayer == Player.Black
-    ? $"[bold green] {_loc.LabelBlack} [/]"  
-    : $"[bold white] {_loc.LabelWhite} [/]";
+    ? _loc.LabelBlack
+    : _loc.LabelWhite;
 
-        grid.AddRow(new Markup(
-            $"  [bold white]{_loc.LabelBlack}:[/] [green]{state.Board.BlackCells}[/]   " +
-            $"[bold white]{_loc.LabelWhite}:[/] [green]{state.Board.WhiteCells}[/]   " +
-            $"[grey]|[/]   {_loc.LabelTurn}: {playerTag} [grey]{_loc.LabelToMove}[/]"));
+    grid.AddRow(new Markup(
+        $"{_loc.LabelBlack}: [green]{state.Board.BlackCells}[/]   " +
+        $"{_loc.LabelWhite}: [green]{state.Board.WhiteCells}[/]   " +
+        $"{_loc.LabelTurn}: {playerTag}").Centered());
         grid.AddRow(new Text(""));
         grid.AddRow(BoardRenderer.BuildTable(state.Board, validMoves));
 

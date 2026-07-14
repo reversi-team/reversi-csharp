@@ -74,11 +74,11 @@ internal sealed class Localization
         PromptPort = "Enter port number:",
         PromptHost = "Enter host address:",
         PromptChooseColor = "Choose your color:",
-        ColorBlack = "● Black",
-        ColorWhite = "○ White",
+        ColorBlack = "[navy]● Black[/]",
+        ColorWhite = "[yellow]● White[/]",
 
-        LabelBlack = "● Black",
-        LabelWhite = "○ White",
+        LabelBlack = "[navy]● Black[/]",
+        LabelWhite = "[yellow]● White[/]",
         LabelTurn = "Turn",
         LabelToMove = "to move",
 
@@ -87,8 +87,8 @@ internal sealed class Localization
         ErrorInvalidMove = "That cell is not a valid move. Try again.",
 
         GameOverHeader = " Game Over ",
-        BlackWins = "  ● Black wins!  ",
-        WhiteWins = "  ○ White wins!  ",
+        BlackWins = "  [navy]● Black[/] wins!  ",
+        WhiteWins = "  [yellow]● White[/] wins!  ",
         Draw = "  It's a draw!  ",
         FinalScore = "Final score",
         PlayAgain = "Play again?",
@@ -115,11 +115,11 @@ internal sealed class Localization
         PromptPort = "Введи номер порту:",
         PromptHost = "Введи адресу хоста:",
         PromptChooseColor = "Обери свій колір:",
-        ColorBlack = "● Чорні",
-        ColorWhite = "○ Білі",
+        ColorBlack = "[navy]● Чорні[/]",
+        ColorWhite = "[yellow]● Білі[/]",
 
-        LabelBlack = "● Чорні",
-        LabelWhite = "○ Білі",
+        LabelBlack = "[navy]● Чорні[/]",
+        LabelWhite = "[yellow]● Білі[/]",
         LabelTurn = "Хід",
         LabelToMove = "ходять",
 
@@ -128,8 +128,8 @@ internal sealed class Localization
         ErrorInvalidMove = "Ця клітинка не є допустимим ходом. Спробуй інший.",
 
         GameOverHeader = " Гра завершена ",
-        BlackWins = "  ● Чорні перемогли!  ",
-        WhiteWins = "  ○ Білі перемогли!  ",
+        BlackWins = "  [navy]● Чорні[/] перемогли!  ",
+        WhiteWins = "  [yellow]● Білі[/] перемогли!  ",
         Draw = "  Нічия!  ",
         FinalScore = "Фінальний рахунок",
         PlayAgain = "Зіграти ще раз?",
