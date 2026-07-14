@@ -99,13 +99,10 @@ public sealed class View<TController> : IView<TController> where TController : I
     /// </summary>
     private void ShowGameState(GameState state, Coords[] validMoves)
     {
-        AnsiConsole.Live(BuildGamePanel(state, validMoves))
-            .AutoClear(false)
-            .Start(ctx =>
-            {
-                ctx.UpdateTarget(BuildGamePanel(state, validMoves));
-                ctx.Refresh();
-            });
+        Console.SetCursorPosition(0,0);
+        DrawTitle();
+        AnsiConsole.WriteLine();
+        AnsiConsole.Write(BuildGamePanel(state, validMoves));
     }
 
     /// <summary>
