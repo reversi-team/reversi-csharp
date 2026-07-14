@@ -99,7 +99,7 @@ public sealed class View<TController> : IView<TController> where TController : I
     /// </summary>
     private void ShowGameState(GameState state, Coords[] validMoves)
     {
-        Console.SetCursorPosition(0,0);
+        Console.SetCursorPosition(0, 0);
         DrawTitle();
         AnsiConsole.WriteLine();
         AnsiConsole.Write(BuildGamePanel(state, validMoves));
@@ -138,14 +138,14 @@ public sealed class View<TController> : IView<TController> where TController : I
         var grid = new Grid();
         grid.AddColumn();
 
-    var playerTag = state.CurrentPlayer == Player.Black
-    ? _loc.LabelBlack
-    : _loc.LabelWhite;
+        var playerTag = state.CurrentPlayer == Player.Black
+        ? _loc.LabelBlack
+        : _loc.LabelWhite;
 
-    grid.AddRow(new Markup(
-        $"{_loc.LabelBlack}: [green]{state.Board.BlackCells}[/]   " +
-        $"{_loc.LabelWhite}: [green]{state.Board.WhiteCells}[/]   " +
-        $"{_loc.LabelTurn}: {playerTag}").Centered());
+        grid.AddRow(new Markup(
+            $"{_loc.LabelBlack}: [green]{state.Board.BlackCells}[/]   " +
+            $"{_loc.LabelWhite}: [green]{state.Board.WhiteCells}[/]   " +
+            $"{_loc.LabelTurn}: {playerTag}").Centered());
         grid.AddRow(new Text(""));
         grid.AddRow(BoardRenderer.BuildTable(state.Board, validMoves));
 
