@@ -178,6 +178,8 @@ public class Controller<TModel> : IController
                     network.Send(new StatusOkMessage());
                 }
 
+                localPlayerMove = !localPlayerMove;
+
                 continue;
             }
 
