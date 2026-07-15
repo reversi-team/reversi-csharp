@@ -103,6 +103,7 @@ public sealed class View<TController> : IView<TController> where TController : I
         DrawTitle();
         AnsiConsole.WriteLine();
         AnsiConsole.Write(BuildGamePanel(state, validMoves));
+        Console.Write("\u001b[0J");
     }
 
     /// <summary>
