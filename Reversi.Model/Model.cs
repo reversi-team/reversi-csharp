@@ -25,10 +25,10 @@ public class Model : IModel
             }
         }
 
-        _matrix[3, 3] = BoardCell.Black;
-        _matrix[4, 4] = BoardCell.Black;
-        _matrix[3, 4] = BoardCell.White;
-        _matrix[4, 3] = BoardCell.White;
+        _matrix[3, 3] = BoardCell.White;
+        _matrix[4, 4] = BoardCell.White;
+        _matrix[3, 4] = BoardCell.Black;
+        _matrix[4, 3] = BoardCell.Black;
 
         Board startingBoard = new Board(CloneMatrix(_matrix));
 
