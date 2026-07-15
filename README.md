@@ -1,19 +1,29 @@
 # Reversi
 
 ### C# implementation for Reversi (Othello)
-Ознайомитися з правилами гри можна [за посиланням](https://www.worldothello.org/about/about-othello/othello-rules/official-rules/english)
+Реалізовано локальний мультиплеєр, а також можливість грати по мережі через пряме підключення між пірами.
+Ознайомитися з правилами гри можна [за посиланням](https://www.worldothello.org/about/about-othello/othello-rules/official-rules/english).
 
 ---
 
 # Для контриб'юторів
 
 ## Структура проєкту
+
 * **Reversi** - точка входу
 * **Reversi.Core** - спільні типи та інтерфейси (контракт API)
 * **Reversi.Model** - ігрова модель (реалізація Core.IModel)
 * **Reversi.View** - взаємодія з користувачем (реалізація Core.IView)
 * **Reversi.Network** - опис протоколу для мережевої гри та його реалізація
 * **Reversi.Controller** - міст що з'єднує Reversi.Model, Reversi.View та Reversi.Network (реалізація Core.IController)
+* **Reversi.Test** - тестове покриття проєкту
+
+## Актуальні задачі:
+
+### Тестування
+- [ ] Додати юніт-тести для Reversi.Model
+- [ ] Додати інтеграційні тести для Reversi.Controller використавши mock для Reversi.View
+- [X] Додати інтеграційні тести для Reversi.Network
 
 ## Початок роботи
 
@@ -26,11 +36,6 @@ cd reversi-csharp
 
 2. Створіть свою робочу гілку:
 
-```bash
-git checkout -b your-branch-name
-```
-
-Або в сучасніший спосіб:
 ```bash
 git switch -c your-branch-name
 ```
@@ -72,6 +77,7 @@ git push -u origin your-branch-name
     * *Приклад:* `fix/model-disk-flip-logic`, `fix/view-score-counter-overflow`
 * **`refactor/`** — зміна структури коду без зміни функціоналу або виправлення помилок.
     * *Приклад:* `refactor/clean-core-interfaces`, `refactor/optimize-model-board-array`
+* **`chore/`** — зміни що не стосуються коду (документація, конфіги, ліцензії тощо).
 
 ### Довготривалі гілки модулів
 
@@ -111,3 +117,7 @@ git push -u origin your-branch-name
 1. Текст після двокрапки пишеться з маленької літери.
 2. Опис має бути коротким, вказувати на те, що саме робить цей коміт (наприклад, `add...`, `fix...`, `update...`), без
    крапки в кінці.
+
+# Ліцензування
+
+Проєкт доступний під подвійною ліцензією MIT / Apache 2.0 (див. [COPYRIGHT.md](COPYRIGHT.md)).
