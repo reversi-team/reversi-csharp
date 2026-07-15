@@ -43,6 +43,7 @@ jobs:
                   -r ${{ matrix.rid }}
                   --self-contained true
                   -p:PublishSingleFile=true
+                  -p:DebugType=None
                   -o publish
 
             - name: Zip artifact (Linux/macOS)
@@ -80,7 +81,13 @@ jobs:
               run: dotnet restore
 
             - name: Publish (framework-dependent, cross-platform)
-              run: dotnet publish Reversi/Reversi.csproj -c Release -o publish
+              run: >
+                  dotnet publish
+                  Reversi/Reversi.csproj
+                  -c Release
+                  -p:UseAppHost=false
+                  -p:DebugType=None
+                  -o publish
 
             - name: Zip artifact
               run: |
