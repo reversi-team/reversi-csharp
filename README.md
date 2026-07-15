@@ -1,10 +1,19 @@
 # Reversi
 
 ### C# implementation for Reversi (Othello)
+Ознайомитися з правилами гри можна [за посиланням](https://www.worldothello.org/about/about-othello/othello-rules/official-rules/english)
 
 ---
 
 # Для контриб'юторів
+
+## Структура проєкту
+* **Reversi** - точка входу
+* **Reversi.Core** - спільні типи та інтерфейси (контракт API)
+* **Reversi.Model** - ігрова модель (реалізація Core.IModel)
+* **Reversi.View** - взаємодія з користувачем (реалізація Core.IView)
+* **Reversi.Network** - опис протоколу для мережевої гри та його реалізація
+* **Reversi.Controller** - міст що з'єднує Reversi.Model, Reversi.View та Reversi.Network (реалізація Core.IController)
 
 ## Початок роботи
 
@@ -26,13 +35,7 @@ git checkout -b your-branch-name
 git switch -c your-branch-name
 ```
 
-3. Не забувайте підтягувати актуальні зміни з main. Завжди робіть це перед пушем:
-
-```bash
-git pull --rebase origin main
-```
-
-4. На кожну задачу створюйте окремий, інформативний коміт:
+3. На кожну задачу створюйте окремий, інформативний коміт:
 
 ```bash
 dotnet format        # виконайте щоб гарантувати відповідність форматування стандартам проєкту
@@ -40,6 +43,12 @@ git status           # перегляньте які файли змінилис
 git diff             # перегляньте що саме змінилося
 git add file1 file2  # додайте необхідні файли до коміту
 git commit -m "feat(model): implement moves validation"
+```
+
+4. Не забувайте підтягувати актуальні зміни з main. Завжди робіть це перед пушем:
+
+```bash
+git pull --rebase origin main
 ```
 
 5. Запуште зміни в гілку з відповідним ім'ям і відкрийте Pull Request:
