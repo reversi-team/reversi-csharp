@@ -23,7 +23,7 @@ internal sealed class Localization
     public required string ColorBlack { get; init; }
     public required string ColorWhite { get; init; }
 
-    public required string WaitingForClient {get; init;}
+    public required string WaitingForClient { get; init; }
 
     // ── Рахунок і хід ────────────────────────────────────────────────────────
     public required string LabelBlack { get; init; }

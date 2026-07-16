@@ -237,7 +237,7 @@ public sealed class View<TController> : IView<TController> where TController : I
             AnsiConsole.Clear();
             DrawTitle();
             AnsiConsole.WriteLine();
-            
+
             return new GameSettings
             {
                 GameType = GameType.NetworkClient,
