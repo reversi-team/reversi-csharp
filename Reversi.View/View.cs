@@ -213,6 +213,11 @@ public sealed class View<TController> : IView<TController> where TController : I
 
             var hostPlayer = colorChoice == _loc.ColorBlack ? Player.Black : Player.White;
 
+            AnsiConsole.Clear();
+            DrawTitle();
+            AnsiConsole.WriteLine();
+            AnsiConsole.MarkupLine(_loc.WaitingForClient);
+
             return new GameSettings
             {
                 GameType = GameType.NetworkHost,
@@ -229,6 +234,10 @@ public sealed class View<TController> : IView<TController> where TController : I
                         : ValidationResult.Error(_loc.ErrorInvalidIp)));
             var port = AnsiConsole.Ask<ushort>($"[bold green]{_loc.PromptPort}[/]");
 
+            AnsiConsole.Clear();
+            DrawTitle();
+            AnsiConsole.WriteLine();
+            
             return new GameSettings
             {
                 GameType = GameType.NetworkClient,

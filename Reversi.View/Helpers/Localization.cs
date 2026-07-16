@@ -23,6 +23,8 @@ internal sealed class Localization
     public required string ColorBlack { get; init; }
     public required string ColorWhite { get; init; }
 
+    public required string WaitingForClient {get; init;}
+
     // ── Рахунок і хід ────────────────────────────────────────────────────────
     public required string LabelBlack { get; init; }
     public required string LabelWhite { get; init; }
@@ -86,6 +88,8 @@ internal sealed class Localization
         ErrorInvalidCell = "'{0}' is not a valid cell. Use A–H and 1–8 (e.g. D3).",
         ErrorInvalidMove = "That cell is not a valid move. Try again.",
 
+        WaitingForClient = "[gray]Host created. Waiting for connection...[/]",
+
         GameOverHeader = " Game Over ",
         BlackWins = "  [navy]● Black[/] wins!  ",
         WhiteWins = "  [yellow]● White[/] wins!  ",
@@ -122,6 +126,8 @@ internal sealed class Localization
         LabelWhite = "[yellow]● Білі[/]",
         LabelTurn = "Хід",
         LabelToMove = "ходять",
+
+        WaitingForClient = "[gray]Хост створено. Очікуємо на з'єднання...[/]",
 
         PromptEnterMove = "[bold green]>[/] Введи хід (напр. [bold]D3[/]):",
         ErrorInvalidCell = "'{0}' — невірна клітинка. Використовуй A–H та 1–8 (напр. D3).",
